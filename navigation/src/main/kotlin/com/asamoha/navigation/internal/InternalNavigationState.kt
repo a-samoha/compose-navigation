@@ -1,6 +1,5 @@
 package com.asamoha.navigation.internal
 
-import com.asamoha.navigation.Route
 import kotlinx.coroutines.flow.Flow
 
 internal sealed class NavigationEvent {
@@ -9,6 +8,8 @@ internal sealed class NavigationEvent {
 }
 
 internal interface InternalNavigationState {
+
+    val currentUuid: String
 
     fun listen(): Flow<NavigationEvent>
 }

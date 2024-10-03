@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import com.asamoha.navigation.internal.EmptyRouter
+import com.asamoha.navigation.internal.InternalNavigationState
 import com.asamoha.navigation.internal.NavigationEvent
 import kotlinx.coroutines.flow.filterIsInstance
 
@@ -24,7 +25,7 @@ fun NavigationHost(
     modifier: Modifier = Modifier,
     routeMapper: @Composable (Route) -> Unit,
 ) {
-    val (router: Router, navigationState: NavigationState) = navigation
+    val (router: Router, navigationState: NavigationState, internalState: InternalNavigationState) = navigation
 
     BackHandler(enabled = !navigationState.isRoot) {
         router.pop()
@@ -37,7 +38,7 @@ fun NavigationHost(
      * (в даному випадку [NavigationHost])
      */
     val saveableStateHolder = rememberSaveableStateHolder()
-    saveableStateHolder.SaveableStateProvider(key = navigationState.currentUuid) {
+    saveableStateHolder.SaveableStateProvider(key = internalState.currentUuid) {
 
         Box(modifier = modifier) {
             CompositionLocalProvider(
