@@ -34,7 +34,6 @@ fun AddItemScreen() {
     val router = LocalRouter.current
     AddItemContent {
         itemsRepository.addItem(it)
-        println("test onSubmitNewItem router $router" )
         router.pop()
     }
 }

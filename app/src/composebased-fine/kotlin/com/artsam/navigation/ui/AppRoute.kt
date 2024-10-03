@@ -1,4 +1,4 @@
-package com.artsam.navigation
+package com.artsam.navigation.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
@@ -6,8 +6,8 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.artsam.navigation.R
 import com.asamoha.navigation.Route
-
 
 sealed class AppRoute(
     @StringRes val titleRes: Int = 0
