@@ -6,13 +6,13 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
-composeRuntime = "1.7.2"
 material = "1.12.0"
 constraintlayout = "2.1.4"
 lifecycleLivedataKtx = "2.8.6"
 lifecycleViewmodelKtx = "2.8.6"
 navigationFragmentKtx = "2.8.1"
 navigationUiKtx = "2.8.1"
+composeRuntime = "1.7.2"
 composeBom = "2024.09.02"
 
 [plugins]
@@ -32,8 +32,9 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "activity" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation"}
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" } # здесь живут компоузбл функции напр.: Text()
-androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "composeRuntime" } # тут живе анотація @Stable
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "composeRuntime" } # тут живе анотація @Stable & @Immutable
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }

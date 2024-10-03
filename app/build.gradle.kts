@@ -41,7 +41,15 @@ android {
         // Вкус "compose bad implementation"
         create("composebased-bad") {
             dimension = "version"
-            applicationId = "com.compose.nav"
+            applicationId = "com.compose.nav.bad"
+            versionCode = 1
+            versionName = "1.0"
+        }
+
+        // Вкус "compose fine implementation"
+        create("composebased-fine") {
+            dimension = "version"
+            applicationId = "com.compose.nav.fine"
             versionCode = 1
             versionName = "1.0"
         }
@@ -98,6 +106,7 @@ android {
 dependencies {
 
     implementation(project(":mylibrary"))
+    implementation(project(":navigation"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
