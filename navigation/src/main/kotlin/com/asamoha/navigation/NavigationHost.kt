@@ -29,7 +29,8 @@ fun NavigationHost(
     Box(modifier = modifier) {
         CompositionLocalProvider(
             LocalRouter provides router
-        ) { }
-        routeMapper.invoke(navigationState.currentRoute)
+        ) {
+            routeMapper.invoke(navigationState.currentRoute)
+        }
     }
 }

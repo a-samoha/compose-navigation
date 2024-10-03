@@ -18,6 +18,7 @@ internal class ScreenStack(
     }
 
     override fun pop() {
+        println("test removeLastOrNull")
         routes.removeLastOrNull()
     }
 
