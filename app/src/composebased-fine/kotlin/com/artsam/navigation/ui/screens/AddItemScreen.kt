@@ -1,5 +1,6 @@
 package com.artsam.navigation.ui.screens
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.artsam.navigation.ItemsRepository
 import com.artsam.navigation.R
+import com.artsam.navigation.ui.AppRoute
 import com.asamoha.navigation.LocalRouter
 
 /**
@@ -32,16 +35,37 @@ import com.asamoha.navigation.LocalRouter
 fun AddItemScreen() {
     val itemsRepository = ItemsRepository.get()
     val router = LocalRouter.current
-    AddItemContent {
-        itemsRepository.addItem(it)
-        router.pop()
-    }
+    AddItemContent(
+        onSubmitNewItem = {
+            itemsRepository.addItem(it)
+            router.pop()
+        },
+        onLaunchSettingsScreen = { router.launch(AppRoute.Tab.Settings) }
+    )
 }
 
 @Composable
-fun AddItemContent(onSubmitNewItem: (String) -> Unit) {
-    var newItemValue by remember { mutableStateOf("") }
+fun AddItemContent(
+    onSubmitNewItem: (String) -> Unit,
+    onLaunchSettingsScreen: () -> Unit,
+) {
+
+    /**
+     * [rememberSaveable] хоч і зберігає дані в [Bundle] але
+     * НЕ преживає знащення самої композиції
+     * тобто: якщо знищується (напр. коли закрив інший скрін)
+     * композиція [AddItemContent] -  [newItemValue] також знищиться.
+     */
+    var newItemValue by rememberSaveable { mutableStateOf("") }
+
     val isAddEnabled by remember {
+        /**
+         * [derivedStateOf] Суттево зменшить кількість емітів (тригерів рекомпозиції)
+         * newItemValue буде емітити на кожну нову букву, а
+         * isAddEnabled буде ємітити ЛИШЕ коли поле пусте, або заповнене
+         * тому що стейт НЕ емітить (ігнорує) ідентичні значення
+         * напр. (true, true, true, true) в єміт полетить лише перший true !!!
+         */
         derivedStateOf { newItemValue.isNotEmpty() }
     }
 
@@ -65,6 +89,12 @@ fun AddItemContent(onSubmitNewItem: (String) -> Unit) {
         ) {
             Text(text = stringResource(R.string.add_new_item))
         }
+        Button(
+            enabled = true,
+            onClick = onLaunchSettingsScreen
+        ) {
+            Text(text = "Launch Settings")
+        }
     }
 }
 
@@ -76,7 +106,7 @@ fun AddItemContent(onSubmitNewItem: (String) -> Unit) {
 @Preview(showSystemUi = true)
 @Composable
 private fun AddItemPreview() {
-    AddItemContent(onSubmitNewItem = {})
+    AddItemContent(onSubmitNewItem = {}, onLaunchSettingsScreen = {})
 }
 
 /**
@@ -87,5 +117,5 @@ private fun AddItemPreview() {
  */
 @Composable
 private fun AddItemScreenTest() {
-    AddItemContent(onSubmitNewItem = {})
+    AddItemContent(onSubmitNewItem = {}, onLaunchSettingsScreen = {})
 }
