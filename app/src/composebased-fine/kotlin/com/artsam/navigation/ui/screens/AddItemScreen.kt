@@ -24,24 +24,29 @@ import androidx.compose.ui.unit.dp
 import com.artsam.navigation.ItemsRepository
 import com.artsam.navigation.R
 import com.artsam.navigation.ui.AppRoute
+import com.artsam.navigation.ui.AppScreen
+import com.artsam.navigation.ui.AppScreenEnvironment
 import com.asamoha.navigation.LocalRouter
 
-/**
- * [AddItemScreen]
- * - грає роль точки входу до екрану для реального арр
- * - готує собі необхідні обїєкти (про які не треба знати батьківським компонентам)
- */
-@Composable
-fun AddItemScreen() {
-    val itemsRepository = ItemsRepository.get()
-    val router = LocalRouter.current
-    AddItemContent(
-        onSubmitNewItem = {
-            itemsRepository.addItem(it)
-            router.pop()
-        },
-        onLaunchSettingsScreen = { router.launch(AppRoute.Tab.Settings) }
-    )
+val AddItemScreenProducer = { AddItemScreen() }
+
+class AddItemScreen : AppScreen {
+    override val environment = AppScreenEnvironment().apply {
+        titleRes = R.string.add_item
+    }
+
+    @Composable
+    override fun Content() {
+        val itemsRepository = ItemsRepository.get()
+        val router = LocalRouter.current
+        AddItemContent(
+            onSubmitNewItem = {
+                itemsRepository.addItem(it)
+                router.pop()
+            },
+            onLaunchSettingsScreen = { router.launch(AppRoute.Tab.Settings) }
+        )
+    }
 }
 
 @Composable

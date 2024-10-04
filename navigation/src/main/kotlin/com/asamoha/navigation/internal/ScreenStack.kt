@@ -2,11 +2,14 @@ package com.asamoha.navigation.internal
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.os.ParcelCompat
 import com.asamoha.navigation.NavigationState
 import com.asamoha.navigation.Route
 import com.asamoha.navigation.Router
+import com.asamoha.navigation.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.UUID
@@ -38,6 +41,9 @@ internal class ScreenStack(
 
     override val currentUuid: String
         get() = routes.last().uuid
+
+    override val currentScreen: Screen
+        by derivedStateOf { currentRoute.screenProducer() }
     // endregion
 
     // region Router impl
