@@ -10,16 +10,17 @@ import com.asamoha.navigation.NavigationState
 import com.asamoha.navigation.Route
 import com.asamoha.navigation.Router
 import com.asamoha.navigation.Screen
+import com.asamoha.navigation.ScreenResponseReceiver
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import java.util.UUID
 
 /**
  * Core navigation stack implementation.
  */
 internal class ScreenStack(
-    private val routes: SnapshotStateList<RouteRecord>
-) : NavigationState, Router, InternalNavigationState, Parcelable {
+    private val routes: SnapshotStateList<RouteRecord>,
+    private val screenResponsesBus: ScreenResponsesBus = ScreenResponsesBus(),
+) : NavigationState, InternalNavigationState, Router, Parcelable {
 
     constructor(parcel: Parcel) : this(
         SnapshotStateList<RouteRecord>().also { newList ->
@@ -39,26 +40,43 @@ internal class ScreenStack(
     override val currentRoute: Route
         get() = routes.last().route
 
+    override val currentScreen: Screen
+            by derivedStateOf { currentRoute.screenProducer() }
+    // endregion
+
+    // region InternalNavigationState impl
     override val currentUuid: String
         get() = routes.last().uuid
 
-    override val currentScreen: Screen
-        by derivedStateOf { currentRoute.screenProducer() }
+    override val screenResponseReceiver: ScreenResponseReceiver = screenResponsesBus
+
+    private val eventsFlow = MutableSharedFlow<NavigationEvent>(
+        extraBufferCapacity = Int.MAX_VALUE,
+    )
+
+    override fun listen(): Flow<NavigationEvent> {
+        return eventsFlow
+    }
     // endregion
 
     // region Router impl
     override fun launch(route: Route) {
+        screenResponsesBus.cleanUp()
         routes.add(RouteRecord(route))
     }
 
-    override fun pop() {
+    override fun pop(response: Any?) {
         val removedRouteRecord = routes.removeLastOrNull()
         if (removedRouteRecord != null) {
             eventsFlow.tryEmit(NavigationEvent.Removed(removedRouteRecord))
+            if (response != null) {
+                screenResponsesBus.send(response)
+            }
         }
     }
 
     override fun restart(route: Route) {
+        screenResponsesBus.cleanUp()
         routes.apply {
             routes.forEach {
                 eventsFlow.tryEmit(NavigationEvent.Removed(it))
@@ -66,16 +84,6 @@ internal class ScreenStack(
             clear()
             add(RouteRecord(route))
         }
-    }
-    // endregion
-
-    // region InternalNavigationState impl
-    private val eventsFlow = MutableSharedFlow<NavigationEvent>(
-        extraBufferCapacity = Int.MAX_VALUE,
-    )
-
-    override fun listen(): Flow<NavigationEvent> {
-        return eventsFlow
     }
     // endregion
 

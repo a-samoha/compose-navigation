@@ -41,7 +41,8 @@ fun NavigationHost(
 
         Box(modifier = modifier) {
             CompositionLocalProvider(
-                LocalRouter provides router
+                LocalRouter provides router,
+                LocalScreenResponseReceiver provides internalState.screenResponseReceiver,
             ) {
                 navigationState.currentScreen.Content()
             }

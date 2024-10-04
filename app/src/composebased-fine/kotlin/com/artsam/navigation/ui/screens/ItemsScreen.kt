@@ -29,6 +29,7 @@ import com.artsam.navigation.ui.AppScreenEnvironment
 import com.artsam.navigation.ui.AppToolbarMenuItem
 import com.artsam.navigation.ui.FloatingAction
 import com.asamoha.navigation.LocalRouter
+import com.asamoha.navigation.ResponseListener
 import com.asamoha.navigation.Router
 
 val ItemsScreenProducer = { ItemsScreen() }
@@ -73,6 +74,15 @@ class ItemsScreen : AppScreen {
         val items by itemsRepository.getItems().collectAsStateWithLifecycle()
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }
+        }
+        ResponseListener<ItemScreenResponse> { response ->
+            when (response.args) {
+                ItemScreenArgs.Add -> itemsRepository.addItem(response.newValue)
+                is ItemScreenArgs.Edit -> itemsRepository.updateItem(
+                    response.args.index,
+                    response.newValue
+                )
+            }
         }
         ItemsContent(
             isItemsEmpty = isEmpty,
