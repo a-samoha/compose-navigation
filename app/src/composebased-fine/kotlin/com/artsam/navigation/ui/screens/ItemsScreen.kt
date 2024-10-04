@@ -1,5 +1,6 @@
 package com.artsam.navigation.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -24,6 +25,7 @@ import com.artsam.navigation.R
 import com.artsam.navigation.ui.AppRoute
 import com.artsam.navigation.ui.AppScreen
 import com.artsam.navigation.ui.AppScreenEnvironment
+import com.artsam.navigation.ui.AppToolbarMenuItem
 import com.artsam.navigation.ui.FloatingAction
 import com.asamoha.navigation.LocalRouter
 import com.asamoha.navigation.Router
@@ -33,10 +35,31 @@ val ItemsScreenProducer = { ItemsScreen() }
 class ItemsScreen : AppScreen {
 
     private var router: Router? = null
+    private val itemsRepository = ItemsRepository.get()
 
     override val environment = AppScreenEnvironment().apply {
+
         titleRes = R.string.items
         icon = Icons.AutoMirrored.Filled.List
+        toolbarMenuItems = listOf(
+            AppToolbarMenuItem(
+                titleRes = R.string.about,
+                onClick = { ctx ->
+                    Toast.makeText(
+                        ctx,
+                        ctx.resources.getString(
+                            R.string.toast_from,
+                            ctx.resources.getString(R.string.items)
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            ),
+            AppToolbarMenuItem(
+                titleRes = R.string.clear,
+                onClick = { _ -> itemsRepository.clear() }
+            ),
+        )
         floatingAction = FloatingAction(
             icon = Icons.Default.Add,
             onClick = { router?.launch(AppRoute.AddItem) }
@@ -46,7 +69,6 @@ class ItemsScreen : AppScreen {
     @Composable
     override fun Content() {
         router = LocalRouter.current
-        val itemsRepository = ItemsRepository.get()
         val items by itemsRepository.getItems().collectAsStateWithLifecycle()
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }

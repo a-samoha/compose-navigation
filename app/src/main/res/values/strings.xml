@@ -15,4 +15,6 @@
     <string name="add_new_item">Add new item</string>
     <string name="increment">Increment</string>
     <string name="random_label">Random Label</string>
+    <string name="toast">"Greetings from"</string>
+    <string name="toast_from">"Greetings from %1s"</string>
 </resources>

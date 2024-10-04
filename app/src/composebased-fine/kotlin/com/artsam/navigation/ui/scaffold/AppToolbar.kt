@@ -1,6 +1,5 @@
 package com.artsam.navigation.ui.scaffold
 
-import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -22,7 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.artsam.navigation.R
+import com.artsam.navigation.ui.AppToolbarMenuItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,8 +29,8 @@ import com.artsam.navigation.R
 fun AppToolbar(
     titleRes: Int,
     isRoot: Boolean,
+    menuItems: List<AppToolbarMenuItem>?,
     onPopAction: () -> Unit,
-    onClearAction: () -> Unit,
 ) {
 
     CenterAlignedTopAppBar(
@@ -74,24 +73,23 @@ fun AppToolbar(
                     expanded = showPopupMenu,
                     onDismissRequest = { showPopupMenu = false }
                 ) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.about)) },
-                        onClick = {
-                            Toast.makeText(
-                                context,
-                                R.string.scaffold_app,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            showPopupMenu = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.clear)) },
-                        onClick = {
-                            onClearAction()
-                            showPopupMenu = false
-                        }
-                    )
+                    menuItems?.forEach { item ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(item.titleRes)) },
+                            leadingIcon = if (item.icon != null) {
+                                {
+                                    Icon(
+                                        item.icon,
+                                        contentDescription = null,
+                                    )
+                                }
+                            } else null,
+                            onClick = {
+                                item.onClick(context)
+                                showPopupMenu = false
+                            }
+                        )
+                    }
                 }
             }
         }

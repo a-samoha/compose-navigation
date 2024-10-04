@@ -1,5 +1,6 @@
 package com.artsam.navigation.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -12,6 +13,7 @@ import androidx.compose.ui.unit.sp
 import com.artsam.navigation.R
 import com.artsam.navigation.ui.AppScreen
 import com.artsam.navigation.ui.AppScreenEnvironment
+import com.artsam.navigation.ui.AppToolbarMenuItem
 
 val ProfileScreenProducer = { ProfileScreen() }
 
@@ -19,6 +21,21 @@ class ProfileScreen : AppScreen {
     override val environment = AppScreenEnvironment().apply {
         titleRes = R.string.profile
         icon = Icons.Default.AccountBox
+        toolbarMenuItems = listOf(
+            AppToolbarMenuItem(
+                titleRes = R.string.about,
+                onClick = { ctx ->
+                    Toast.makeText(
+                        ctx,
+                        ctx.resources.getString(
+                            R.string.toast_from,
+                            ctx.resources.getString(R.string.profile)
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            )
+        )
     }
 
     @Composable

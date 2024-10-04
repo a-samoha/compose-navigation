@@ -1,6 +1,7 @@
 package com.artsam.navigation.ui.screens
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import com.artsam.navigation.R
 import com.artsam.navigation.ui.AppRoute
 import com.artsam.navigation.ui.AppScreen
 import com.artsam.navigation.ui.AppScreenEnvironment
+import com.artsam.navigation.ui.AppToolbarMenuItem
 import com.asamoha.navigation.LocalRouter
 
 val AddItemScreenProducer = { AddItemScreen() }
@@ -33,6 +35,21 @@ val AddItemScreenProducer = { AddItemScreen() }
 class AddItemScreen : AppScreen {
     override val environment = AppScreenEnvironment().apply {
         titleRes = R.string.add_item
+        toolbarMenuItems = listOf(
+            AppToolbarMenuItem(
+                titleRes = R.string.about,
+                onClick = { ctx ->
+                    Toast.makeText(
+                        ctx,
+                        ctx.resources.getString(
+                            R.string.toast_from,
+                            ctx.resources.getString(R.string.add_item)
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            )
+        )
     }
 
     @Composable
