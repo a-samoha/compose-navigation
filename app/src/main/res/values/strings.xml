@@ -17,4 +17,5 @@
     <string name="random_label">Random Label</string>
     <string name="toast">"Greetings from"</string>
     <string name="toast_from">"Greetings from %1s"</string>
+    <string name="edit_item">Edit Item</string>
 </resources>

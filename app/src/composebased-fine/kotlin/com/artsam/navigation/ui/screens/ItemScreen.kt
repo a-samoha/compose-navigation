@@ -1,6 +1,7 @@
 package com.artsam.navigation.ui.screens
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,12 +30,32 @@ import com.artsam.navigation.ui.AppScreen
 import com.artsam.navigation.ui.AppScreenEnvironment
 import com.artsam.navigation.ui.AppToolbarMenuItem
 import com.asamoha.navigation.LocalRouter
+import kotlinx.parcelize.Parcelize
 
-val AddItemScreenProducer = { AddItemScreen() }
+/**
+ * Caring (Керування)  -  перетворення функції з кількома аргументами
+ * у функції з меншою кільуістю аргументів
+ */
+fun itemScreenProducer(args: ItemScreenArgs): () -> ItemScreen {
+    return { ItemScreen(args) }
+}
 
-class AddItemScreen : AppScreen {
+sealed class ItemScreenArgs : Parcelable {
+    @Parcelize
+    data object Add : ItemScreenArgs()
+
+    @Parcelize
+    data class Edit(val index: Int) : ItemScreenArgs()
+}
+
+class ItemScreen(
+    private val args: ItemScreenArgs,
+) : AppScreen {
     override val environment = AppScreenEnvironment().apply {
-        titleRes = R.string.add_item
+        titleRes = when (args) {
+            ItemScreenArgs.Add -> R.string.add_item
+            is ItemScreenArgs.Edit -> R.string.edit_item
+        }
         toolbarMenuItems = listOf(
             AppToolbarMenuItem(
                 titleRes = R.string.about,
@@ -56,9 +77,19 @@ class AddItemScreen : AppScreen {
     override fun Content() {
         val itemsRepository = ItemsRepository.get()
         val router = LocalRouter.current
-        AddItemContent(
-            onSubmitNewItem = {
-                itemsRepository.addItem(it)
+        ItemContent(
+            initialValue = if (args is ItemScreenArgs.Edit) {
+                remember { itemsRepository.getItems().value[args.index] }
+            } else {
+                ""
+            },
+            isAddMode = args is ItemScreenArgs.Add,
+            onSubmitNewItem = { newValue ->
+                if (args is ItemScreenArgs.Edit) {
+                    itemsRepository.updateItem(args.index, newValue)
+                } else {
+                    itemsRepository.addItem(newValue)
+                }
                 router.pop()
             },
             onLaunchSettingsScreen = { router.launch(AppRoute.Tab.Settings) }
@@ -67,7 +98,9 @@ class AddItemScreen : AppScreen {
 }
 
 @Composable
-fun AddItemContent(
+fun ItemContent(
+    initialValue: String = "",
+    isAddMode: Boolean = false,
     onSubmitNewItem: (String) -> Unit,
     onLaunchSettingsScreen: () -> Unit,
 ) {
@@ -76,9 +109,9 @@ fun AddItemContent(
      * [rememberSaveable] хоч і зберігає дані в [Bundle] але
      * НЕ преживає знащення самої композиції
      * тобто: якщо знищується (напр. коли закрив інший скрін)
-     * композиція [AddItemContent] -  [newItemValue] також знищиться.
+     * композиція [ItemContent] -  [newItemValue] також знищиться.
      */
-    var newItemValue by rememberSaveable { mutableStateOf("") }
+    var currentItemValue by rememberSaveable { mutableStateOf(initialValue) }
 
     val isAddEnabled by remember {
         /**
@@ -88,7 +121,7 @@ fun AddItemContent(
          * тому що стейт НЕ емітить (ігнорує) ідентичні значення
          * напр. (true, true, true, true) в єміт полетить лише перший true !!!
          */
-        derivedStateOf { newItemValue.isNotEmpty() }
+        derivedStateOf { currentItemValue.isNotEmpty() }
     }
 
     Column(
@@ -97,19 +130,20 @@ fun AddItemContent(
         modifier = Modifier.fillMaxSize(),
     ) {
         OutlinedTextField(
-            value = newItemValue,
+            value = currentItemValue,
             label = { Text(stringResource(R.string.enter_value)) },
             singleLine = true,
             onValueChange = { newValue ->
-                newItemValue = newValue
+                currentItemValue = newValue
             }
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             enabled = isAddEnabled,
-            onClick = { onSubmitNewItem(newItemValue) }
+            onClick = { onSubmitNewItem(currentItemValue) }
         ) {
-            Text(text = stringResource(R.string.add_new_item))
+            val btnText = if (isAddMode) R.string.add_new_item else R.string.edit_item
+            Text(text = stringResource(btnText))
         }
         Button(
             enabled = true,
@@ -128,7 +162,7 @@ fun AddItemContent(
 @Preview(showSystemUi = true)
 @Composable
 private fun AddItemPreview() {
-    AddItemContent(onSubmitNewItem = {}, onLaunchSettingsScreen = {})
+    ItemContent(onSubmitNewItem = {}, onLaunchSettingsScreen = {})
 }
 
 /**
@@ -139,5 +173,5 @@ private fun AddItemPreview() {
  */
 @Composable
 private fun AddItemScreenTest() {
-    AddItemContent(onSubmitNewItem = {}, onLaunchSettingsScreen = {})
+    ItemContent(onSubmitNewItem = {}, onLaunchSettingsScreen = {})
 }

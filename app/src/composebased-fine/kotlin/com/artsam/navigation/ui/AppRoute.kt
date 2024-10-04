@@ -1,9 +1,10 @@
 package com.artsam.navigation.ui
 
-import com.artsam.navigation.ui.screens.AddItemScreenProducer
+import com.artsam.navigation.ui.screens.ItemScreenArgs
 import com.artsam.navigation.ui.screens.ItemsScreenProducer
 import com.artsam.navigation.ui.screens.ProfileScreenProducer
 import com.artsam.navigation.ui.screens.SettingsScreenProducer
+import com.artsam.navigation.ui.screens.itemScreenProducer
 import com.asamoha.navigation.Route
 import kotlinx.parcelize.Parcelize
 
@@ -12,7 +13,9 @@ sealed class AppRoute(
 ) : Route {
 
     @Parcelize
-    data object AddItem : AppRoute(AddItemScreenProducer)
+    data class Item(
+        val args: ItemScreenArgs
+    ) : AppRoute(itemScreenProducer(args))
 
     sealed class Tab(
         screenProducer: () -> AppScreen,

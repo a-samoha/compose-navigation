@@ -1,11 +1,12 @@
 package com.artsam.navigation.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
@@ -62,7 +63,7 @@ class ItemsScreen : AppScreen {
         )
         floatingAction = FloatingAction(
             icon = Icons.Default.Add,
-            onClick = { router?.launch(AppRoute.AddItem) }
+            onClick = { router?.launch(AppRoute.Item(ItemScreenArgs.Add)) }
         )
     }
 
@@ -73,14 +74,21 @@ class ItemsScreen : AppScreen {
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }
         }
-        ItemsContent(isItemsEmpty = isEmpty, items = { items })
+        ItemsContent(
+            isItemsEmpty = isEmpty,
+            items = { items },
+            onItemClicked = { index ->
+                router?.launch(AppRoute.Item(ItemScreenArgs.Edit(index)))
+            }
+        )
     }
 }
 
 @Composable
 fun ItemsContent(
     isItemsEmpty: Boolean,
-    items: () -> List<String>  // використовуємо лямбду щоб функція вважалась skippable !!!
+    items: () -> List<String>,  // використовуємо лямбду щоб функція вважалась skippable !!!
+    onItemClicked: (Int) -> Unit,
 ) {
     if (isItemsEmpty) {
         Text(
@@ -94,10 +102,16 @@ fun ItemsContent(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(items.invoke()) { item ->
+            val itemsList = items()
+            items(itemsList.size) { index ->
                 Text(
-                    text = item,
-                    modifier = Modifier.padding(all = 8.dp)
+                    text = itemsList[index],
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onItemClicked(index)
+                        }
+                        .padding(all = 8.dp)
                 )
             }
         }
@@ -115,5 +129,6 @@ private fun ItemsContentPreview() {
     ItemsContent(
         isItemsEmpty = false,
         items = { List(10) { "Item #${it + 1}" } },
+        onItemClicked = {}
     )
 }
