@@ -7,28 +7,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.artsam.navigation.ui.AppRoute
-import com.asamoha.navigation.Route
+import kotlinx.collections.immutable.persistentListOf
 
-val RootTabs = listOf(AppRoute.Tab.Items, AppRoute.Tab.Settings, AppRoute.Tab.Profile)
+/**
+ * List of all root tabs.
+ */
+val RootTabs = persistentListOf(AppRoute.Tab.Items, AppRoute.Tab.Settings, AppRoute.Tab.Profile)
 
+/**
+ * In-app bottom navigation bar.
+ */
 @Composable
 fun AppNavigationBar(
-    currentRoute: Route,
-    onRouteSelected: (AppRoute.Tab) -> Unit
+    currentIndex: Int,
+    onIndexSelected: (Int) -> Unit
 ) {
     NavigationBar {
-        RootTabs.forEach { tab ->
-            val environment = remember (tab){
+        RootTabs.forEachIndexed { index, tab ->
+            val environment = remember(tab) {
                 tab.screenProducer().environment
             }
             val icon = environment.icon
-            if(icon != null){
+            if (icon != null) {
                 NavigationBarItem(
-                    selected = currentRoute == tab,
+                    selected = currentIndex == index,
                     label = { Text(stringResource(environment.titleRes)) },
                     onClick = {
-                        onRouteSelected(tab)
+                        onIndexSelected(index)
                     },
                     icon = {
                         Icon(
@@ -36,8 +43,17 @@ fun AppNavigationBar(
                             contentDescription = stringResource(environment.titleRes),
                         )
                     }
-                )}
-
+                )
+            }
         }
     }
+}
+
+@Preview
+@Composable
+fun AppNavigationBarPreview() {
+    AppNavigationBar(
+        currentIndex = 0,
+        onIndexSelected = {}
+    )
 }

@@ -2,12 +2,14 @@ package com.asamoha.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.asamoha.navigation.internal.InternalNavigationState
-import com.asamoha.navigation.internal.RouteRecord
+import com.asamoha.navigation.internal.ScreenMultiStack
 import com.asamoha.navigation.internal.ScreenStack
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 /**
  * Pattern `Fasad` for whole navigation module
@@ -28,12 +30,17 @@ data class Navigation internal constructor(
  * @paraminitialRoute starting screen to be displayed in the [NavigationHost]
  */
 @Composable
-fun rememberNavigation(initialRoute: Route): Navigation {
-    val screenStack = rememberSaveable {
-        ScreenStack(mutableStateListOf(RouteRecord(initialRoute)))
+fun rememberNavigation(
+    rootRoutes: ImmutableList<Route>,
+    initialIndex: Int = 0,
+): Navigation {
+    val screenStack = rememberSaveable(rootRoutes) {
+        val stacks = SnapshotStateList<ScreenStack>()
+        stacks.addAll(rootRoutes.map(::ScreenStack))
+        ScreenMultiStack(stacks, initialIndex)
     }
 
-    return remember(initialRoute) {
+    return remember(rootRoutes) {
         Navigation(
             router = screenStack,
             navigationState = screenStack,
@@ -41,3 +48,11 @@ fun rememberNavigation(initialRoute: Route): Navigation {
         )
     }
 }
+
+/**
+ * Навігація з одним стеком це частковий випадок навігації з мультистеком
+ */
+@Composable
+fun rememberNavigation(
+    initialRoute: Route,
+): Navigation = rememberNavigation(persistentListOf(initialRoute))

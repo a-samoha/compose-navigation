@@ -6,14 +6,15 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
+kotlinxCollectionsImmutable = "0.3.7"
 material = "1.12.0"
 constraintlayout = "2.1.4"
 lifecycleLivedataKtx = "2.8.6"
 lifecycleViewmodelKtx = "2.8.6"
-navigationFragmentKtx = "2.8.1"
-navigationUiKtx = "2.8.1"
-composeRuntime = "1.7.2"
-composeBom = "2024.09.02"
+navigationFragmentKtx = "2.8.2"
+navigationUiKtx = "2.8.2"
+composeRuntime = "1.7.3"
+composeBom = "2024.09.03"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -43,6 +44,7 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" } # здесь живет сама анотация @Preview
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }  # здесь живет ComposeViewAdapter который используется в debugImplementation() для рендеринга Preview
 
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

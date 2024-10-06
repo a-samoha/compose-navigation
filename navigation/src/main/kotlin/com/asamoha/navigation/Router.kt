@@ -22,5 +22,11 @@ interface Router {
      * remove all screens from the navigation stack and launch
      * the specified [route].
      */
-    fun restart(route: Route)
+    fun restart(route: Route) = restart(listOf(route))
+
+    // region MultiStack navigation
+    fun restart(rootRoutes: List<Route>, initialIndex: Int = 0)
+
+    fun switchStack(index: Int)
+    //endregion
 }

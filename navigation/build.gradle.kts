@@ -64,4 +64,8 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.activity.compose)
+
+    // Дає можливість використовувати НЕМЮТАБЕЛЬНІ колекції
+    // які вважаються СТАБІЛЬНИМИ с т.з. компілятора Composе
+    api(libs.kotlinx.collections.immutable)
 }

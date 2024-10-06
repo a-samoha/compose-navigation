@@ -5,7 +5,6 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.artsam.navigation.ui.AppRoute
 import com.artsam.navigation.ui.AppScreenEnvironment
 import com.asamoha.navigation.NavigationHost
 import com.asamoha.navigation.NavigationState
@@ -14,7 +13,7 @@ import com.asamoha.navigation.rememberNavigation
 
 @Composable
 fun AppScaffold() {
-    val navigation = rememberNavigation(initialRoute = AppRoute.Tab.Items)
+    val navigation = rememberNavigation(RootTabs)
     val (router: Router, navigationState: NavigationState) = navigation
     val environment = navigationState.currentScreen.environment as AppScreenEnvironment
     Scaffold(
@@ -24,7 +23,6 @@ fun AppScaffold() {
                 isRoot = navigationState.isRoot,
                 menuItems = environment.toolbarMenuItems,
                 onPopAction = router::pop,
-//                onClearAction = itemsRepository::clear
             )
         },
         floatingActionButton = {
@@ -32,12 +30,10 @@ fun AppScaffold() {
         },
         floatingActionButtonPosition = FabPosition.End,
         bottomBar = {
-            if (navigationState.isRoot) {
-                AppNavigationBar(
-                    currentRoute = navigationState.currentRoute,
-                    onRouteSelected = router::restart,
-                )
-            }
+            AppNavigationBar(
+                currentIndex = navigationState.currentStackIndex,
+                onIndexSelected = router::switchStack,
+            )
         },
         content = { paddingValues ->
             NavigationHost(

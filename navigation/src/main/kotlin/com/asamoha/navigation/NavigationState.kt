@@ -25,4 +25,6 @@ interface NavigationState {
      * Analog Activity which starts with Intent
      */
     val currentScreen: Screen
+
+    val currentStackIndex: Int
 }
