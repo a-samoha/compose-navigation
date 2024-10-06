@@ -6,6 +6,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.core.os.ParcelCompat
 import com.asamoha.navigation.Route
 import com.asamoha.navigation.Screen
@@ -18,6 +19,10 @@ internal class ScreenStack(
     private val routes: SnapshotStateList<RouteRecord>,
     private val screenResponsesBus: ScreenResponsesBus = ScreenResponsesBus(),
 ) : Parcelable {
+
+    constructor(routes:List<Route>) : this(
+        routes.map(::RouteRecord).toMutableStateList()
+    )
 
     constructor(parcel: Parcel) : this(
         SnapshotStateList<RouteRecord>().also { newList ->

@@ -21,6 +21,20 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <!--Коли юзер клікає на посилання в браузері-->
+                <!--то браузер надсилає до Android OS intent з action VIEW-->
+                <action android:name="android.intent.action.VIEW"/>
+                <!--Кажемо OS, що можна використовувати цей додаток "За замовчуванням"-->
+                <!--НЕ перепитуючи юзера який додаток використовувати для відкриття посилання-->
+                <category android:name="android.intent.category.DEFAULT"/>
+                <!--Декларує, що наш додаток при запуску НЕ буде-->
+                <!--виконувати жодних деструктивних дій (видалення/редагування даних)-->
+                <!--Означає "запуск на перегляд-->
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="nav"/>
+            </intent-filter>
         </activity>
 
     </application>

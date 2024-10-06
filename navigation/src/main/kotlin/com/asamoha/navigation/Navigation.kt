@@ -1,10 +1,15 @@
 package com.asamoha.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.platform.LocalContext
+import com.asamoha.navigation.deeplinks.DeepLinkHandler
+import com.asamoha.navigation.deeplinks.MultistackState
+import com.asamoha.navigation.deeplinks.StackState
 import com.asamoha.navigation.internal.InternalNavigationState
 import com.asamoha.navigation.internal.ScreenMultiStack
 import com.asamoha.navigation.internal.ScreenStack
@@ -33,11 +38,25 @@ data class Navigation internal constructor(
 fun rememberNavigation(
     rootRoutes: ImmutableList<Route>,
     initialIndex: Int = 0,
+    deepLinkHandler: DeepLinkHandler = DeepLinkHandler.DEFAULT,
 ): Navigation {
+    val activity = LocalContext.current as? Activity
     val screenStack = rememberSaveable(rootRoutes) {
-        val stacks = SnapshotStateList<ScreenStack>()
-        stacks.addAll(rootRoutes.map(::ScreenStack))
-        ScreenMultiStack(stacks, initialIndex)
+        val inputState = MultistackState(
+            activeStackIndex = initialIndex,
+            stacks = rootRoutes.map { rootRoute -> StackState(listOf(rootRoute)) }
+        )
+
+        val outputState = activity?.intent?.data?.let { deepLinkUri ->
+            deepLinkHandler.handleDeeplink(deepLinkUri, inputState)
+        } ?: inputState
+
+        ScreenMultiStack(
+            initialIndex = outputState.activeStackIndex,
+            stacks = outputState.stacks.map { stackState ->
+                ScreenStack(stackState.routes)
+            }.toMutableStateList(),
+        )
     }
 
     return remember(rootRoutes) {
