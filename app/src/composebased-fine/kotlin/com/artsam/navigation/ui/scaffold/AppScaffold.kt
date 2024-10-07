@@ -5,6 +5,8 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.artsam.navigation.MainViewModel
+import com.artsam.navigation.di.injectViewModel
 import com.artsam.navigation.ui.AppDeepLinkHandler
 import com.artsam.navigation.ui.AppScreenEnvironment
 import com.asamoha.navigation.NavigationHost
@@ -18,6 +20,7 @@ import com.asamoha.navigation.rememberNavigation
  */
 @Composable
 fun AppScaffold() {
+    val viewModel = injectViewModel<MainViewModel>()
     val navigation = rememberNavigation(RootTabs, deepLinkHandler = AppDeepLinkHandler)
     val (router: Router, navigationState: NavigationState) = navigation
     val environment = navigationState.currentScreen.environment as AppScreenEnvironment
@@ -28,6 +31,7 @@ fun AppScaffold() {
                 isRoot = navigationState.isRoot,
                 menuItems = environment.toolbarMenuItems,
                 onPopAction = router::pop,
+                onClearAction = viewModel::clear
             )
         },
         floatingActionButton = {

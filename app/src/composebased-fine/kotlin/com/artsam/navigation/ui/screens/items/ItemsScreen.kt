@@ -21,9 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.artsam.navigation.ItemsRepository
 import com.artsam.navigation.R
+import com.artsam.navigation.di.injectViewModel
 import com.artsam.navigation.ui.AppRoute
 import com.artsam.navigation.ui.AppScreen
 import com.artsam.navigation.ui.AppScreenEnvironment
@@ -39,7 +38,6 @@ val ItemsScreenProducer = { ItemsScreen() }
 class ItemsScreen : AppScreen {
 
     private var router: Router? = null
-    private val itemsRepository = ItemsRepository.get()
 
     override val environment = AppScreenEnvironment().apply {
 
@@ -61,7 +59,6 @@ class ItemsScreen : AppScreen {
             ),
             AppToolbarMenuItem(
                 titleRes = R.string.clear,
-                onClick = { _ -> itemsRepository.clear() }
             ),
         )
         floatingAction = FloatingAction(
@@ -73,7 +70,7 @@ class ItemsScreen : AppScreen {
     @Composable
     override fun Content() {
         router = LocalRouter.current
-        val viewModel = viewModel<ItemsViewModel>()
+        val viewModel = injectViewModel<ItemsViewModel>()
         val items by viewModel.itemsFlow.collectAsStateWithLifecycle()
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }

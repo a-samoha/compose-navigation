@@ -30,7 +30,7 @@ class AppScreenEnvironment : ScreenEnvironment {
 data class AppToolbarMenuItem(
     val titleRes: Int,
     val icon: ImageVector? = null,
-    val onClick: (Context) -> Unit,
+    val onClick: (Context) -> Unit = {},
 )
 
 @Immutable

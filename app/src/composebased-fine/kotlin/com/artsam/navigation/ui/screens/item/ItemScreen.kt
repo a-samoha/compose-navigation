@@ -23,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artsam.navigation.R
+import com.artsam.navigation.di.injectViewModel
 import com.artsam.navigation.ui.AppRoute
 import com.artsam.navigation.ui.AppScreen
 import com.artsam.navigation.ui.AppScreenEnvironment
@@ -80,7 +80,9 @@ class ItemScreen(
 
     @Composable
     override fun Content() {
-        val viewModel = viewModel { ItemViewModel(args) }
+        val viewModel = injectViewModel<ItemViewModel, ItemViewModel.Factory> { factory ->
+            factory.create(args)
+        }
         val router = LocalRouter.current
         ItemContent(
             initialValue = remember { viewModel.getInitialValue() },
@@ -104,8 +106,8 @@ fun ItemContent(
     /**
      * [rememberSaveable] хоч і зберігає дані в [Bundle] але
      * НЕ преживає знащення самої композиції
-     * тобто: якщо знищується (напр. коли закрив інший скрін)
-     * композиція [ItemContent] -  [newItemValue] також знищиться.
+     * тобто: якщо знищується (напр. коли перекриває інший скрін)
+     * композиція [ItemContent] - [initialValue] також знищиться.
      */
     var currentItemValue by rememberSaveable { mutableStateOf(initialValue) }
 

@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import com.artsam.navigation.ItemsRepository
 import com.artsam.navigation.ui.screens.item.ItemScreenArgs
 import com.artsam.navigation.ui.screens.item.ItemScreenResponse
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ItemsViewModel(
-    private val repo: ItemsRepository = ItemsRepository.get()
+@HiltViewModel
+class ItemsViewModel @Inject constructor(
+    private val repo: ItemsRepository,
 ) : ViewModel() {
 
     val itemsFlow = repo.getItems()

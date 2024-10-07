@@ -3,6 +3,8 @@ package com.artsam.navigation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Repository for staring and managing the list of items.
@@ -28,12 +30,10 @@ interface ItemsRepository {
      */
     fun clear()
 
-    companion object {
-        fun get(): ItemsRepository = ItemsRepositoryImpl
-    }
 }
 
-object ItemsRepositoryImpl : ItemsRepository {
+@Singleton
+class ItemsRepositoryImpl @Inject constructor() : ItemsRepository {
 
     private val items = MutableStateFlow(generateFakeItems())
 

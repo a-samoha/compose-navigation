@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.artsam.navigation.R
 import com.artsam.navigation.ui.AppToolbarMenuItem
 
 
@@ -31,6 +32,7 @@ fun AppToolbar(
     isRoot: Boolean,
     menuItems: List<AppToolbarMenuItem>?,
     onPopAction: () -> Unit,
+    onClearAction: () -> Unit,
 ) {
 
     CenterAlignedTopAppBar(
@@ -85,7 +87,11 @@ fun AppToolbar(
                                 }
                             } else null,
                             onClick = {
-                                item.onClick(context)
+                                if (item.titleRes == R.string.clear) {
+                                    onClearAction()
+                                } else {
+                                    item.onClick(context)
+                                }
                                 showPopupMenu = false
                             }
                         )
