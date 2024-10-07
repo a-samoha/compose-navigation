@@ -1,10 +1,10 @@
 package com.artsam.navigation.ui
 
-import com.artsam.navigation.ui.screens.ItemScreenArgs
-import com.artsam.navigation.ui.screens.ItemsScreenProducer
+import com.artsam.navigation.ui.screens.item.ItemScreenArgs
+import com.artsam.navigation.ui.screens.items.ItemsScreenProducer
 import com.artsam.navigation.ui.screens.ProfileScreenProducer
 import com.artsam.navigation.ui.screens.SettingsScreenProducer
-import com.artsam.navigation.ui.screens.itemScreenProducer
+import com.artsam.navigation.ui.screens.item.itemScreenProducer
 import com.asamoha.navigation.Route
 import kotlinx.parcelize.Parcelize
 

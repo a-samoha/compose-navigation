@@ -1,4 +1,4 @@
-package com.artsam.navigation.ui.screens
+package com.artsam.navigation.ui.screens.items
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artsam.navigation.ItemsRepository
 import com.artsam.navigation.R
 import com.artsam.navigation.ui.AppRoute
@@ -28,6 +29,7 @@ import com.artsam.navigation.ui.AppScreen
 import com.artsam.navigation.ui.AppScreenEnvironment
 import com.artsam.navigation.ui.AppToolbarMenuItem
 import com.artsam.navigation.ui.FloatingAction
+import com.artsam.navigation.ui.screens.item.ItemScreenArgs
 import com.asamoha.navigation.LocalRouter
 import com.asamoha.navigation.ResponseListener
 import com.asamoha.navigation.Router
@@ -71,19 +73,12 @@ class ItemsScreen : AppScreen {
     @Composable
     override fun Content() {
         router = LocalRouter.current
-        val items by itemsRepository.getItems().collectAsStateWithLifecycle()
+        val viewModel = viewModel<ItemsViewModel>()
+        val items by viewModel.itemsFlow.collectAsStateWithLifecycle()
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }
         }
-        ResponseListener<ItemScreenResponse> { response ->
-            when (response.args) {
-                ItemScreenArgs.Add -> itemsRepository.addItem(response.newValue)
-                is ItemScreenArgs.Edit -> itemsRepository.updateItem(
-                    response.args.index,
-                    response.newValue
-                )
-            }
-        }
+        ResponseListener(viewModel::processResponse)
         ItemsContent(
             isItemsEmpty = isEmpty,
             items = { items },

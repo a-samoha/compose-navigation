@@ -1,4 +1,4 @@
-package com.artsam.navigation.ui.screens
+package com.artsam.navigation.ui.screens.item
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.artsam.navigation.ItemsRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artsam.navigation.R
 import com.artsam.navigation.ui.AppRoute
 import com.artsam.navigation.ui.AppScreen
@@ -80,14 +80,10 @@ class ItemScreen(
 
     @Composable
     override fun Content() {
-        val itemsRepository = ItemsRepository.get()
+        val viewModel = viewModel { ItemViewModel(args) }
         val router = LocalRouter.current
         ItemContent(
-            initialValue = if (args is ItemScreenArgs.Edit) {
-                remember { itemsRepository.getItems().value[args.index] }
-            } else {
-                ""
-            },
+            initialValue = remember { viewModel.getInitialValue() },
             isAddMode = args is ItemScreenArgs.Add,
             onSubmitNewItem = { newValue ->
                 router.pop(ItemScreenResponse(args, newValue))

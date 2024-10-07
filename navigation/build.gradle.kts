@@ -68,4 +68,6 @@ dependencies {
     // Дає можливість використовувати НЕМЮТАБЕЛЬНІ колекції
     // які вважаються СТАБІЛЬНИМИ с т.з. компілятора Composе
     api(libs.kotlinx.collections.immutable)
+    api(libs.androidx.lifecycle.viewmodel.compose)
+
 }

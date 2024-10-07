@@ -1,7 +1,7 @@
 package com.artsam.navigation.ui
 
 import android.net.Uri
-import com.artsam.navigation.ui.screens.ItemScreenArgs
+import com.artsam.navigation.ui.screens.item.ItemScreenArgs
 import com.asamoha.navigation.deeplinks.DeepLinkHandler
 import com.asamoha.navigation.deeplinks.MultistackState
 
