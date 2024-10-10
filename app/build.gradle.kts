@@ -19,6 +19,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     // Groovy syntax
@@ -41,7 +44,14 @@ android {
             versionName = "1.0"
         }
 
-        // Вкус "compose bad implementation"
+        // Вкус "skippable"
+        create("skippable") {
+            dimension = "version"
+            applicationId = "com.skippable.fun"
+            versionCode = 1
+            versionName = "1.0"
+        }
+        // Вкус "Custom compose navigation bad implementation"
         create("composebased-bad") {
             dimension = "version"
             applicationId = "com.compose.nav.bad"
@@ -49,7 +59,7 @@ android {
             versionName = "1.0"
         }
 
-        // Вкус "compose fine implementation"
+        // Вкус "Custom compose navigation fine implementation"
         create("composebased-fine") {
             dimension = "version"
             applicationId = "com.compose.nav.fine"
@@ -57,10 +67,9 @@ android {
             versionName = "1.0"
         }
 
-        // Вкус "skippable"
-        create("skippable") {
+        create("native-nav-comp") {
             dimension = "version"
-            applicationId = "com.skippable.fun"
+            applicationId = "com.compose.nav.native"
             versionCode = 1
             versionName = "1.0"
         }
@@ -89,12 +98,12 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.5"
     }
-    packaging{
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    kotlinOptions{
+    kotlinOptions {
         freeCompilerArgs += listOf(
             "-P",
             "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${rootProject.buildDir.absolutePath}/reports",
@@ -117,6 +126,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
@@ -127,6 +137,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
@@ -134,4 +145,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

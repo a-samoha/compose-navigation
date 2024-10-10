@@ -17,6 +17,8 @@ navigationFragmentKtx = "2.8.2"
 navigationUiKtx = "2.8.2"
 composeRuntime = "1.7.3"
 composeBom = "2024.09.03"
+lifecycleRuntimeKtx = "2.8.6"
+navVersion = "2.8.2"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -35,9 +37,9 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
-
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navVersion" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "activity" }
-androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation"}
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" } # здесь живут компоузбл функции напр.: Text()
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "composeRuntime" } # тут живе анотація @Stable & @Immutable
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -56,4 +58,5 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 
