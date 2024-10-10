@@ -54,7 +54,7 @@ fun NavApp(modifier: Modifier = Modifier) {
         NavHost(
             navController = navController,
             startDestination = ItemsRoute,
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         ) {
             composable(ItemsRoute) { ItemsScreen() }
             composable(AddItemRoute) { AddItemScreen() }
