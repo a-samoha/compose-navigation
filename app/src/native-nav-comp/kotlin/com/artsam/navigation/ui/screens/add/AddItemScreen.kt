@@ -27,6 +27,7 @@ import com.artsam.navigation.R
 import com.artsam.navigation.ui.screens.AddItemRoute
 import com.artsam.navigation.ui.screens.EventConsumer
 import com.artsam.navigation.ui.screens.LocalNavController
+import com.artsam.navigation.ui.screens.routeClass
 
 @Composable
 fun AddItemScreen() {
@@ -38,7 +39,7 @@ fun AddItemScreen() {
     )
     val navController = LocalNavController.current
     EventConsumer(viewModel.exitChannel) {
-        if (navController.currentBackStackEntry?.destination?.route == AddItemRoute) {
+        if (navController.currentBackStackEntry.routeClass() == AddItemRoute::class) {
             navController.popBackStack()
         }
     }

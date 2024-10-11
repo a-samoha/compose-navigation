@@ -1,7 +1,5 @@
 package com.artsam.navigation.model
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ItemsRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
+    // @ApplicationContext private val context: Context,
 ) {
 
     private val itemsFlow =
@@ -26,5 +24,17 @@ class ItemsRepository @Inject constructor(
 
     fun getItems(): Flow<List<String>> {
         return itemsFlow.asStateFlow().onStart { delay(3000) }
+    }
+
+    suspend fun getByIndex(index: Int): String {
+        delay(1000)
+        return itemsFlow.value[index]
+    }
+
+    suspend fun update(index: Int, newValue: String) {
+        delay(2000)
+        itemsFlow.update { oldList ->
+            oldList.toMutableList().apply { set(index, newValue) }
+        }
     }
 }

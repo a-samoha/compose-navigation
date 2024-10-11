@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
 }
 
@@ -51,6 +52,7 @@ android {
             versionCode = 1
             versionName = "1.0"
         }
+
         // Вкус "Custom compose navigation bad implementation"
         create("composebased-bad") {
             dimension = "version"
@@ -67,7 +69,9 @@ android {
             versionName = "1.0"
         }
 
+        // Вкус "Native compose navigation with Google lib."
         create("native-nav-comp") {
+            isDefault = true
             dimension = "version"
             applicationId = "com.compose.nav.native"
             versionCode = 1
@@ -115,7 +119,9 @@ android {
 dependencies {
 
     implementation(project(":mylibrary"))
-    implementation(project(":navigation"))
+    //implementation(project(":navigation"))
+
+    implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
